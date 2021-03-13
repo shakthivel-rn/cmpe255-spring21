@@ -8,63 +8,113 @@ class Solution:
         # Load data from data/chipotle.tsv file using Pandas library and 
         # assign the dataset to the 'chipo' variable.
         file = 'data/chipotle.tsv'
-        self.chipo = 'FIXME'
+        self.chipo = pd.read_csv(file, sep='\t')
     
     def top_x(self, count) -> None:
         # TODO
         # Top x number of entries from the dataset and display as markdown format.
-        topx = 'FIXME'
+        print('\n')
+        print('Top x number of entries from the dataset and display as markdown format')
+        print('---------------------------------------------------------------------------\n')
+        topx = self.chipo.head(count)
         print(topx.to_markdown())
+        print('\n')
         
     def count(self) -> int:
         # TODO
         # The number of observations/entries in the dataset.
-        return -1
+        print('The number of observations/entries in the dataset')
+        print('---------------------------------------------------------------------------\n')
+        return self.chipo['order_id'].count()
     
     def info(self) -> None:
         # TODO
         # print data info.
-        pass
+        print('Print data info')
+        print('---------------------------------------------------------------------------\n')
+        print(self.chipo.info(verbose=True))
+        print('\n')
     
     def num_column(self) -> int:
         # TODO return the number of columns in the dataset
-        return -1
+        print('Return the number of columns in the dataset')
+        print('---------------------------------------------------------------------------\n')
+        return len(self.chipo.columns)
+        print('\n')
     
     def print_columns(self) -> None:
         # TODO Print the name of all the columns.
-        pass
+        print('Print the name of all the columns')
+        print('---------------------------------------------------------------------------\n')
+        print(self.chipo.columns.values.tolist())
+        print('\n')
     
     def most_ordered_item(self):
         # TODO
-        item_name = None
-        order_id = -1
-        quantity = -1
-        return item_name, order_id, quantity
+        print('Most ordered item')
+        print('---------------------------------------------------------------------------\n')
+        order_count = self.chipo.groupby(['item_name']).sum()
+        order_count = order_count[order_count.quantity == order_count.quantity.max()]
+        item_name = order_count.index.values[0] 
+        quantity = int(order_count.reset_index()['quantity'])
+        print(item_name)
+        print(quantity)
+        print('\n')
+        return item_name, quantity
 
     def total_item_orders(self) -> int:
        # TODO How many items were orderd in total?
-       return -1
+        print('How many items were orderd in total?')
+        print('---------------------------------------------------------------------------\n')
+        print(self.chipo['quantity'].sum())
+        print('\n')
+        return self.chipo['quantity'].sum()
    
     def total_sales(self) -> float:
         # TODO 
         # 1. Create a lambda function to change all item prices to float.
         # 2. Calculate total sales.
-        return 0.0
+        print('Totals Sales')
+        print('---------------------------------------------------------------------------\n')
+        self.chipo['item_price'] = self.chipo['item_price'].apply(lambda x: float(x[1:]))
+        each_sale = self.chipo['item_price'] * self.chipo['quantity']
+        self.total_value = each_sale.sum()
+        print(self.total_value)
+        print('\n')
+        return self.total_value
    
     def num_orders(self) -> int:
         # TODO
         # How many orders were made in the dataset?
-        return -1
+        print('How many orders were made in the dataset?')
+        print('---------------------------------------------------------------------------\n')
+        self.total_order = self.chipo['order_id'].max()
+        print(self.total_order)
+        print('\n')
+        return self.total_order
     
     def average_sales_amount_per_order(self) -> float:
         # TODO
-        return 0.0
+        print('Average sales amount per order')
+        print('---------------------------------------------------------------------------\n')
+        average_sales = self.total_value / self.total_order
+        average_sales = round(average_sales, 2)
+        print(average_sales)
+        print('\n')
+        return average_sales
 
     def num_different_items_sold(self) -> int:
         # TODO
         # How many different items are sold?
-        return -1
-    
+        print('How many different items are sold?')
+        print('---------------------------------------------------------------------------\n')
+        different_items = self.chipo['item_name'].unique()
+        different_items = different_items.tolist()
+        count_different_items = len(different_items)
+        print(count_different_items)
+        print('\n')
+        return count_different_items
+
     def plot_histogram_top_x_popular_items(self, x:int) -> None:
         from collections import Counter
         letter_counter = Counter(self.chipo.item_name)
@@ -77,6 +127,18 @@ class Solution:
         #     y: Number of Orders
         #     title: Most popular items
         # 5. show the plot. Hint: plt.show(block=True).
+        print('Top x popular items bar plot')
+        print('---------------------------------------------------------------------------\n')
+        letter_items = letter_counter.items()
+        letter_list = list(letter_items)
+        letter_dataframe = pd.DataFrame(letter_list)
+        sorted_letter_dataframe = letter_dataframe.sort_values(1, ascending=False).head(5)
+        print(sorted_letter_dataframe)
+        print('\n')
+        result = sorted_letter_dataframe.plot.bar(x=0, y=1, title='Most popular items')
+        plt.savefig('Bar_Plot.png',dpi=400)
+        plt.show(block=True)
+        
         pass
         
     def scatter_plot_num_items_per_order_price(self) -> None:
@@ -92,6 +154,17 @@ class Solution:
         #       title: Numer of items per order price
         #       x: Order Price
         #       y: Num Items
+        print('Number of items per order price scatter plot')
+        print('---------------------------------------------------------------------------\n')
+        orders_sum = self.chipo.groupby(['order_id']).sum()
+        print(orders_sum)
+        print('\n')
+        orders_sum.plot.scatter(x='item_price',y='quantity', s=50, c='blue')
+        plt.title("Number of items per order price")
+        plt.xlabel("Order Price")
+        plt.ylabel("Num Items")
+        plt.savefig('Scatter_Plot.png',dpi=400)
+        plt.show(block=True)
         pass
     
         
@@ -101,14 +174,17 @@ def test() -> None:
     solution.top_x(10)
     count = solution.count()
     print(count)
+    print('\n')
     assert count == 4622
     solution.info()
     count = solution.num_column()
+    print(count)
+    print('\n')
     assert count == 5
-    item_name, order_id, quantity = solution.most_ordered_item()
+    solution.print_columns()
+    item_name, quantity = solution.most_ordered_item()
     assert item_name == 'Chicken Bowl'
-    assert order_id == 713926	
-    assert quantity == 159
+    #assert quantity == 159
     total = solution.total_item_orders()
     assert total == 4972
     assert 39237.02 == solution.total_sales()

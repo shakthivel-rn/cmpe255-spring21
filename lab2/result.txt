@@ -1,0 +1,7 @@
+$11914 lines loaded
+       engine_cylinders transmission_type      driven_wheels  number_of_doors   market_category vehicle_size vehicle_style  highway_mpg  city_mpg  popularity   msrp     msrp_pred
+2514                6.0         automatic   rear_wheel_drive              3.0               NaN      midsize     cargo_van           18        13        1385   2052  11678.904701
+11798               4.0         automatic    all_wheel_drive              4.0  crossover,hybrid      compact       4dr_suv           33        29         640  25995  17071.836352
+6637                6.0         automatic    all_wheel_drive              4.0               NaN        large         wagon           22        15        1851  29100  20605.620310
+2575                4.0         automatic  front_wheel_drive              4.0               NaN      midsize         sedan           42        31        2202  22200  23462.322535
+7336                6.0         automatic    all_wheel_drive              4.0         crossover      midsize       4dr_suv           27        20         640  32995  25761.834451

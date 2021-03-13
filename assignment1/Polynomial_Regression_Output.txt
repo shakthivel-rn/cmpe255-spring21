@@ -1,0 +1,3 @@
+Feature with the best fit line - LSTAT: percentage lower status of the population
+LSTAT RMSE value: 5.670556553613913
+LSTAT RSquared value: 0.5967734963163216
